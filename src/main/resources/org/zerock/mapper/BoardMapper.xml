@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+    <!-- <![CDATA[]]>를 부분은 XML에서 부등호를 사용하기 위해서 사용 -->
+
+    <!--게시판 조회-->
+    <select id="getList" resultType="org.zerock.domain.BoardVO">
+        <![CDATA[
+        SELECT *
+        FROM tbl_board
+        WHERE bno > 0
+        ]]>
+    </select>
+
+    <!--게시물 조회 시 페이징 처리-->
+    <select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+        SELECT ROW_NUMBER() over (ORDER BY regdate DESC) AS rn,
+               bno,
+               title,
+               content,
+               writer,
+               regdate,
+               updatedate
+        FROM tbl_board
+        ORDER BY rn, regdate DESC
+        limit 0,10;
+    </select>
+
+    <!--게시물 작성-->
+    <!--insert만 처리되고 생성된 PK 값을 알 필요가 없는 경우-->
+    <insert id="insert">
+        INSERT INTO tbl_board (title, content, writer)
+        VALUES (#{title}, #{content}, #{writer})
+    </insert>
+
+    <!--insert문이 실행되고 생성된 PK 값을 알아야 하는 경우-->
+    <insert id="insertSelectKey">
+
+        <selectKey keyProperty="bno" order="BEFORE"
+                   resultType="long">
+            SELECT MAX(bno)+1 FROM tbl_board
+        </selectKey>
+
+        INSERT INTO tbl_board (bno,title,content, writer)
+        VALUES (#{bno}, #{title}, #{content}, #{writer})
+
+        <!--방금 입력한 테이블의 auto_increment로 증가된 컬럼을 갖고온다. -->
+        <!--
+        <selectKey resultType="long" keyProperty="bno" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        -->
+    </insert>
+
+    <!--게시물 상세 조회-->
+    <select id="read" resultType="org.zerock.domain.BoardVO">
+        SELECT bno, title, content, writer, regdate, updatedate
+        FROM tbl_board
+        WHERE bno = #{bno}
+    </select>
+
+    <!--게시물 삭제-->
+    <delete id="delete">
+        DELETE
+        FROM tbl_board
+        WHERE bno = #{bno}
+    </delete>
+
+    <!--게시물 수정-->
+    <update id="update">
+        UPDATE tbl_board
+        SET title= #{title},
+            content=#{content},
+            writer = #{writer},
+            updateDate = now()
+        WHERE bno = #{bno}
+    </update>
+
+
+</mapper>

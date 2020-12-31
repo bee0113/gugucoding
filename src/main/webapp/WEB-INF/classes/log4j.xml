@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM
+        "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<!--<log4j:configuration debug="true">-->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- Application Loggers -->
+    <logger name="org.zerock.controller">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.zerock.service">
+        <level value="info"/>
+    </logger>
+
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework.core">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.springframework.beans">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.springframework.context">
+        <level value="info"/>
+    </logger>
+
+    <logger name="org.springframework.web">
+        <level value="info"/>
+    </logger>
+    <!--    <logger name="log4jdbc.log4j2" additivity="false">-->
+    <!--        <appender-ref ref="Console"/>-->
+    <!--    </logger>-->
+
+    <!-- SQL문만 로깅, PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문 출력 -->
+    <logger name="jdbc.sqlonly">
+        <level value="debug"/>
+    </logger>
+
+    <!-- SQL문과 수행 시간 정보(milliseconds) 포함 -->
+    <logger name="jdbc.sqltiming">
+        <level value="debug"/>
+    </logger>
+
+    <!-- ResultSet을 포함한 모든 JDBC 호출 정보 로깅. 로그양이 많음 -->
+    <logger name="jdbc.resultset">
+        <level value="warn"/>
+    </logger>
+
+    <!-- SQL 결과를 table 형태로 로깅 -->
+    <logger name="jdbc.resultsettable">
+        <level value="info"/>
+    </logger>
+
+    <!-- ResultSet을 제외한 모든 JDBC 호출 정보 로깅. JDBC 문제를 추적해야 할 필요가 있는 경우에만 사용 -->
+    <logger name="jdbc.audit">
+        <level value="warn"/>
+    </logger>
+
+    <!-- Connection의 연결과 종료에 관련된 로깅. 메모리 누수 확인? -->
+    <logger name="jdbc.connection">
+        <level value="warn"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root>
+        <priority value="warn"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</log4j:configuration>
